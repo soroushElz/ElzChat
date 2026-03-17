@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /api/v1/
+spring:
+  profiles:
+    active: dev
+springdoc:
+  default-produces-media-type: application/json
