@@ -1,3 +1,17 @@
+## Table of Contents
+
+- [Real-Time Messaging & Offline Catch-Up](#real-time-messaging-offline-catch-up)
+- [Private Chat Channel Initialization](#private-chat-channel-initialization)
+- [Message Reactions & Real-Time Event Updates](#message-reactions--real-time-event-updates)
+- [User Blocking, Real-Time Notifications & Message Restriction](#user-blocking-real-time-notifications--message-restriction)
+- [Offline Notification Catch-Up & Pending Event Synchronization](#offline-notification-catch-up--pending-event-synchronization)
+- [User Contact List & Active Chat Channel Retrieval](#user-contact-list--active-chat-channel-retrieval)
+- [Message Forwarding Across Channels](#message-forwarding-across-channels)
+- [Filtered Message Search](#filtered-message-search)
+- [Group Lifecycle Management (Creation, Leave, & Deletion)](#group-lifecycle-management-creation-leave--deletion)
+
+
+<a id="real-time-messaging-offline-catch-up"></a>
 ### 💬 Real-Time Messaging & Offline Catch-Up
 
 #### Use Case: Real-Time Private Messaging, Threaded Replies, and Pending Message Retrieval
@@ -11,7 +25,7 @@ Allows authenticated users to engage in real-time private conversations over Web
 #### 🧪 Integration test
  implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L108-L172
 
-The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in realistic scenarios.
+The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in real[...]
 
 #### 🔄 Execution Flow
 
@@ -28,6 +42,7 @@ The integration tests run against the embedded server and messaging stack to ens
 | **STOMP Sub** | `/user/topic/chat` | `SUB` | Subscribe to receive real-time incoming messages |
 | **REST API** | `/api/v1/chat/messages/pending` | `GET` | Retrieve undelivered messages accumulated while offline |
 
+<a id="private-chat-channel-initialization"></a>
 ### 💬 Private Chat Channel Initialization
 
 #### Use Case: Establish Direct Private Chat Channel
@@ -43,7 +58,7 @@ Allows an authenticated user to initialize or establish a new 1-on-1 private cha
 #### 📋 Detailed Steps
 
 1. **Initialization Request**
-   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both `user1.getId()` and `user2.getId()`.
+   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both `user1.getId()` and `user2.ge[...]
 
 2. **Channel Creation & Resolution**
    * **Process Channel:** The server validates the user IDs and authentication token, then creates or resolves the 1-on-1 private chat channel between the two specified participants.
@@ -60,9 +75,10 @@ Allows an authenticated user to initialize or establish a new 1-on-1 private cha
 | **REST API** | `/api/v1/chat/newChannel` | `POST` | Initialize or retrieve a 1-on-1 private chat channel between two users |
 ### 👍 Message Reactions & Real-Time Event Updates
 
+<a id="message-reactions--real-time-event-updates"></a>
 #### Use Case: Add/Remove Message Reactions and Real-Time Event Broadcast
 
-Allows authenticated users to add or remove emoji reactions on channel messages via REST endpoints, while broadcasting real-time reaction updates to subscribed channel members over WebSocket queues and validating reaction state constraints.
+Allows authenticated users to add or remove emoji reactions on channel messages via REST endpoints, while broadcasting real-time reaction updates to subscribed channel members over WebSocket queue[...]
 
 * **Primary Actors:** Authenticated Users
 * **Protocols:** REST API (Reaction Actions), STOMP over WebSocket (Event Notifications)
@@ -84,11 +100,12 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 | **REST API** | `/api/v1/message/{messageId}/reaction` | `POST` | Add or remove an emoji reaction on a target message |
 | **STOMP Sub** | `/user/queue/events` | `SUB` | Receive real-time notification events for reaction changes |
 
+<a id="user-blocking-real-time-notifications--message-restriction"></a>
 ### 🚫 User Blocking, Real-Time Notifications & Message Restriction
 
 #### Use Case: User Block/Unblock Events and Blocked Message Enforcement
 
-Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules when a blocked user attempts to communicate.
+Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules whe[...]
 
 * **Primary Actors:** Authenticated Users
 * **Protocols:** REST API (Block List Management), STOMP over WebSocket (Block Notifications & Error Dispatch)
@@ -111,6 +128,7 @@ Allows authenticated users to manage their block lists via REST endpoints while 
 | **STOMP Sub** | `/user/queue/notification/error` | `SUB` | Receive real-time error messages (e.g., blocked message attempt failures) |
 | **STOMP Send** | `/app/chat/{channelId}` | `SEND` | Attempt chat message delivery to a target channel |
 
+<a id="offline-notification-catch-up--pending-event-synchronization"></a>
 ### 🔔 Offline Notification Catch-Up & Pending Event Synchronization
 
 #### Use Case: Offline Recipient Pending Notification Retrieval
@@ -137,6 +155,7 @@ Allows users who were offline when a notification-generating event occurred (suc
 | **REST API** | `/api/v1/user/updateBlockList` | `POST` | Update user block list (triggers pending notification if target is offline) |
 | **REST API** | `/api/v1/user/notification/pending` | `GET` | Fetch all pending notifications generated while the authenticated recipient was offline |
 
+<a id="user-contact-list--active-chat-channel-retrieval"></a>
 ### 📱 User Contact List & Active Chat Channel Retrieval
 
 #### Use Case: Fetch Active User Chat Channels (Contact List)
@@ -161,11 +180,12 @@ Allows an authenticated user to retrieve a complete list of all active private c
 | :--- | :--- | :---: | :--- |
 | **REST API** | `/api/v1/user/contacts` | `GET` | Retrieve all active private chat channels (contact list) associated with the authenticated user |
 
+<a id="message-forwarding-across-channels"></a>
 ### ⏩ Message Forwarding Across Channels
 
 #### Use Case: Forward Messages Between Private Channels
 
-Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real-time, marked with `isForwarded = true`, preserving both the original sender and forwarder metadata.
+Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real[...]
 
 * **Primary Actors:** Authenticated Users (Original Sender, Forwarder, Destination Recipient)
 * **Protocols:** STOMP over WebSocket
@@ -184,11 +204,12 @@ Allows an authenticated user to forward existing messages from a source chat cha
 | **STOMP Send** | `/app/chat/{destinationChannelId}/forward` | `SEND` | Forward existing messages from a source channel to a destination channel |
 | **STOMP Sub** | `/user/topic/chat` | `SUB` | Receive real-time incoming messages, including forwarded messages |
 
+<a id="filtered-message-search"></a>
 ### 🔍 Filtered Message Search
 
 #### Use Case: Search Channel Messages by Dynamic Criteria Filters
 
-Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). Access is restricted so that non-channel members receive a `403 Forbidden` response.
+Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). Access is restricted so tha[...]
 
 * **Primary Actors:** Authenticated Channel Members, Non-Members (Unauthorized)
 * **Protocols:** REST API
@@ -199,7 +220,7 @@ Allows an authorized channel member to search and filter chat history within a s
 
 1. **Search Request Dispatch (Channel Member)**
    * **Submit Search:** User A sends a `POST` request to `/api/v1/chat/{channelId}/search` containing a payload array of `SearchFilters`.
-   * **Authorization & Query Execution:** The server confirms User A is a member of `{channelId}`, builds a dynamic query using the provided filter criteria, and queries the channel message repository.
+   * **Authorization & Query Execution:** The server confirms User A is a member of `{channelId}`, builds a dynamic query using the provided filter criteria, and queries the channel message repos[...]
    * **Deliver Results:** The server returns `200 OK` with a `List<ChatMessageDto>` matching all requested filter constraints simultaneously (AND logic).
 
 2. **Channel Authorization Enforcement (Non-Member)**
@@ -236,11 +257,12 @@ The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in 
 | :--- | :--- | :---: | :--- |
 | **REST API** | `/api/v1/chat/{channelId}/search` | `POST` | Search and filter channel messages using dynamic criterion payloads (`CONTENT`, `WRITER_ID`, `TIME_SENT`) | 
 
+<a id="group-lifecycle-management-creation-leave--deletion"></a>
 ### 👥 Group Lifecycle Management (Creation, Leave, & Deletion)
 
 #### Use Case: Create Group, Manage Member Departures, and Disband Group
 
-Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group details and permanently delete/disband the group.
+Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group detail[...]
 
 * **Primary Actors:** Group Admin (Creator), Group Members
 * **Protocols:** REST API
@@ -261,4 +283,4 @@ Allows authenticated users to create multi-member group channels, allows group m
 | **REST API** | `/api/v1/group/{groupId}` | `GET` | Retrieve summary details and active member list of a group |
 | **REST API** | `/api/v1/group/{groupId}` | `DELETE` | Permanently disband and delete a group channel (Admin only) |
 
-This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
+This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in [...]
