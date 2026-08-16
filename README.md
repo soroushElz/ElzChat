@@ -211,7 +211,7 @@ User A (Offline Recipient)        Server                     User B (Active Send
    │   [User A Offline for 1+ Day]  │◄── POST /user/updateBlockList ─┤
    │                                │    (Block User A)              │
    │                                ├─── Persist Pending Notification│
-   │                                │◄── 200 OK ─────────────────────┤
+   │                                │─────────── 200 OK ────────────►│
    │                                │                                │
    │   [User A Logs In / Reconnects]│                                │
    ├─── GET /user/notification/pending►                            │
