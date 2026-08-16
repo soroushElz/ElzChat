@@ -1,3 +1,32 @@
+# ElzChat
+
+## Authentication — Signup & Signin (Summary)
+
+This project implements a JWT-based signup and signin flow exposed under the `auth` REST controller. Summary derived from the AuthenticationController and DTOs:
+
+- Endpoints
+  - `POST /auth/register` — Sign up. Accepts a RegistrationRequest with `firstname`, `lastname`, `email`, and `password`. The controller validates input (`@Valid`) and delegates the creation to `AuthenticationService`. On success it returns a simple JSON message indicating registration succeeded.
+  - `POST /auth/authenticate` — Sign in. Accepts an AuthenticationRequest with `email` and `password`. On success the controller returns an AuthenticationResponse containing `accessToken`, `refreshToken`, and `tokenType` (defaults to `Bearer`).
+  - `POST /auth/refreshtoken` — Refresh access token. Accepts a TokenRefreshRequest containing a `RefreshToken` field and returns a new AuthenticationResponse. The endpoint may throw `TokenRefreshException` when refresh fails.
+
+- DTO validation and rules
+  - RegistrationRequest: requires `firstname`, `lastname`, `email` (`@Email`) and `password` (min length 8).
+  - AuthenticationRequest: requires a valid `email` and `password` (min length 8).
+  - TokenRefreshRequest: contains a non-blank `RefreshToken` field (note capitalization).
+  - ChangePasswordRequest exists with `newPassword` validated for min length 8 and can be used when implementing password-change endpoints.
+
+- Response shape
+  - AuthenticationResponse contains `accessToken`, `refreshToken`, and `tokenType` (default `Bearer`).
+
+- Implementation notes
+  - The controller uses Jakarta Bean Validation (`@Valid`, `@NotEmpty`, `@NotNull`, `@Size`, `@Email`) to validate incoming requests.
+  - Core authentication logic (user creation, credential verification, token issuance, and refresh handling) is delegated to `AuthenticationService` (not included in the provided snippets).
+  - Tests referenced in the README validate the messaging flows and rely on the authentication stack being available for integration tests.
+
+This summary was added based on the authentication-related source files: AuthenticationController.java and DTO classes under `src/main/java/com/example/ChatApplication/auth/DTO/`.
+
+---
+
 ## Application Features
 
 - [Real-Time Messaging & Offline Catch-Up](#real-time-messaging-offline-catch-up)
@@ -28,7 +57,7 @@ Allows authenticated users to engage in real-time private conversations over Web
 #### 🧪 Integration test
  implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L108-L172
 
-The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in real[...] 
+The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in [...] 
 
 #### 🔄 Execution Flow
 
@@ -65,13 +94,12 @@ Allows an authenticated user to initialize or establish a new 1-on-1 private cha
 #### 📋 Detailed Steps
 
 1. **Initialization Request**
-   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both `user1.getId()` and `user2.ge[...] 
+   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both `user1.getId()` and `user2.ge[...]
 
 2. **Channel Creation & Resolution**
    * **Process Channel:** The server validates the user IDs and authentication token, then creates or resolves the 1-on-1 private chat channel between the two specified participants.
 
-3. **Response Delivery**
-   * **Deliver Payload:** The server returns `200 OK` with an `EstablishedPrivateChannelDto` containing the initialized channel details.
+3. **Response Delivery**n   * **Deliver Payload:** The server returns `200 OK` with an `EstablishedPrivateChannelDto` containing the initialized channel details.
 
 ---
 
@@ -91,7 +119,7 @@ Allows an authenticated user to initialize or establish a new 1-on-1 private cha
 
 #### Use Case: Add/Remove Message Reactions and Real-Time Event Broadcast
 
-Allows authenticated users to add or remove emoji reactions on channel messages via REST endpoints, while broadcasting real-time reaction updates to subscribed channel members over WebSocket queues and event channels.
+Allows authenticated users to add or remove emoji reactions on channel messages via REST endpoints, while broadcasting real-time reaction updates to subscribed channel members over WebSocket queues an[...]
 
 * **Primary Actors:** Authenticated Users
 * **Protocols:** REST API (Reaction Actions), STOMP over WebSocket (Event Notifications)
@@ -123,7 +151,7 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 
 #### Use Case: User Block/Unblock Events and Blocked Message Enforcement
 
-Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules when a block is in effect.
+Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules when a [...]
 
 * **Primary Actors:** Authenticated Users
 * **Protocols:** REST API (Block List Management), STOMP over WebSocket (Block Notifications & Error Dispatch)
@@ -218,7 +246,7 @@ Allows an authenticated user to retrieve a complete list of all active private c
 
 #### Use Case: Forward Messages Between Private Channels
 
-Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real-time.
+Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real-time[...] 
 
 * **Primary Actors:** Authenticated Users (Original Sender, Forwarder, Destination Recipient)
 * **Protocols:** STOMP over WebSocket
@@ -247,7 +275,7 @@ Allows an authenticated user to forward existing messages from a source chat cha
 
 #### Use Case: Search Channel Messages by Dynamic Criteria Filters
 
-Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). Access is restricted so that non-members cannot query channel history.
+Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). Access is restricted so tha[...]
 
 * **Primary Actors:** Authenticated Channel Members, Non-Members (Unauthorized)
 * **Protocols:** REST API
@@ -257,12 +285,11 @@ Allows an authorized channel member to search and filter chat history within a s
  #### 📋 Detailed Steps
 
 1. **Search Request Dispatch (Channel Member)**
-   * **Submit Search:** User A sends a `POST` request to `/api/v1/chat/{channelId}/search` containing a payload array of `SearchFilters`.
+   * **Submit Request:** User A sends a `POST` request to `/api/v1/chat/{channelId}/search` containing a payload array of `SearchFilters`.
    * **Authorization & Query Execution:** The server confirms User A is a member of `{channelId}`, builds a dynamic query using the provided filter criteria, and queries the channel message repos[...]
    * **Deliver Results:** The server returns `200 OK` with a `List<ChatMessageDto>` matching all requested filter constraints simultaneously (AND logic).
 
-2. **Channel Authorization Enforcement (Non-Member)**
-   * **Unauthorized Access Attempt:** User C (who is not a participant in `{channelId}`) sends a `POST` request to `/api/v1/chat/{channelId}/search`.
+2. **Channel Authorization Enforcement (Non-Member)**n   * **Unauthorized Access Attempt:** User C (who is not a participant in `{channelId}`) sends a `POST` request to `/api/v1/chat/{channelId}/search`.
    * **Access Rejection:** The server detects that User C lacks channel membership and immediately returns a `403 Forbidden` response without exposing channel data.
 
 ---
@@ -297,7 +324,7 @@ The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in 
 
 #### Use Case: Create Group, Manage Member Departures, and Disband Group
 
-Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group details and manage membership.
+Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group detail[...]
 
 * **Primary Actors:** Group Admin (Creator), Group Members
 * **Protocols:** REST API
