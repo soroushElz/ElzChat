@@ -100,28 +100,6 @@ Allows authenticated users to manage their block lists via REST endpoints while 
 #### 🔄 Execution Flow
 <img width="1086" height="1448" alt="image" src="https://github.com/user-attachments/assets/1bfbfbc9-48ab-4c40-ad51-5cae3096ccfa" />
 
-
-```
-User A (Blocker)                  Server                     User B (Blocked)
-   │                                │                                │
-   │                                │◄── STOMP Subscribe Block Queue ┤
-   │                                │    (/user/queue/notif/block)   │
-   │                                │◄── STOMP Subscribe Error Queue ┤
-   │                                │    (/user/queue/notif/error)   │
-   │                                │                                │
-   ├─── POST /user/updateBlockList ►│                                │
-   │    (Block: User B)             ├────── STOMP Block Event ──────►│ (Received)
-   │◄── 200 OK ─────────────────────┤    (BlockedBy: A, Blocked: B)  │
-   │                                │                                │
-   │                                │◄───── STOMP Send /app/chat ────┤
-   │                                │       (Attempt message send)   │
-   │                                ├────── STOMP Error Event ──────►│ (Received)
-   │                                │       ("you are blocked!")     │
-   │                                │                                │
-   ├─── POST /user/updateBlockList ►│                                │
-   │    (Unblock: User B)           ├────── STOMP Unblock Event ────►│ (Received)
-   │◄── 200 OK ─────────────────────┤    (Action: UNBLOCK)           │
-```
 #### 📋 Detailed Steps
 
 1. **Subscription Setup**
@@ -167,20 +145,9 @@ Allows users who were offline when a notification-generating event occurred (suc
 
 
 #### 🔄 Execution Flow
+<img width="1086" height="1448" alt="image" src="https://github.com/user-attachments/assets/1d5fd0c0-aed5-44bb-98bd-baa2df0e1cdc" />
 
-```
-User A (Offline Recipient)           Server                     User B (Active Sender)
-   │                                   │                                │
-   │   [User A Offline for 1+ Day]     │◄── POST /user/updateBlockList ─┤
-   │                                   │    (Block User A)              │
-   │                                   ├─── Persist Pending Notification│
-   │                                   │─────────── 200 OK ────────────►│
-   │                                   │                                │
-   │   [User A Logs In / Reconnects]   │                                │
-   ├── GET /user/notification/pending ►│                                │
-   │◄──  200 OK List<Notification> ────│                                │
-   │    (BlockNotificationPayload)     │                                │
-```
+
 #### 📋 Detailed Steps
 
 1. **Offline State Identification**
