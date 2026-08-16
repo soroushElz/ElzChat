@@ -31,7 +31,42 @@ User A (Online)              Server                  User B (online)
 
 ```
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
+sequenceDiagram
+    autonumber
+    actor UserA as User 1
+    participant Server as REST & STOMP Backend
+    actor UserB as User 2
 
+    note over UserA, UserB: Step 1: Session Setup & Subscription
+    UserA->>Server: Connect STOMP Session (JWT Auth)
+    UserB->>Server: Connect STOMP Session (JWT Auth)
+    UserB->>Server: SUBSCRIBE /user/topic/chat
+
+    rect rgb(235, 245, 255)
+        note over UserA, UserB: Step 2: Real-Time Exchange & Threaded Reply
+        UserA->>Server: STOMP SEND /app/chat/{channelId} ("hello")
+        UserB->>Server: STOMP SEND /app/chat/{channelId} ("hello4")
+        Server-->>UserB: STOMP Message Event ("hello", "hello4")
+        
+        UserB->>Server: STOMP SEND /app/chat/{channelId} ("replyMessage", replyTo: msgId)
+        Server-->>UserB: STOMP Message Event (Reply Payload with parent msgId)
+    end
+
+    rect rgb(255, 245, 235)
+        note over UserA, UserB: Step 3: Offline Messaging
+        UserB->>Server: Disconnect STOMP Session
+        UserA->>Server: STOMP SEND /app/chat/{channelId} ("user1: are you offline?")
+        Server->Server: Recipient Offline -> Persist Message as Pending
+    end
+
+    rect rgb(235, 255, 235)
+        note over UserA, UserB: Step 4: Pending Message Retrieval (REST API)
+        UserB->>Server: GET /api/v1/chat/messages/pending?channelId={channelId}
+        Server-->>UserB: 200 OK List<ChatMessageDto> ("user1: are you offline?")
+        
+        UserA->>Server: GET /api/v1/chat/messages/pending
+        Server-->>UserA: 200 OK List<ChatMessageDto> (Pending Messages for User 1)
+    end
 
 #### 📋 Detailed Steps
 
