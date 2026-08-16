@@ -133,6 +133,8 @@ Allows authenticated users to manage their block lists via REST endpoints while 
 * **Protocols:** REST API (Block List Management), STOMP over WebSocket (Block Notifications & Error Dispatch)
 
 ---
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L231-L280
 
 #### 🔄 Execution Flow
 
