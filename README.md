@@ -3,32 +3,31 @@
 
 ### 💻 Technology Stack
 
-* **Core Framework:** Java & Spring Boot[cite: 1, 2]
-* **Real-time Messaging:** WebSocket with STOMP Protocol (`/ws` endpoint, SockJS fallback support)[cite: 2]
-* **Security & Authentication:** Spring Security with JSON Web Tokens (JWT)[cite: 2, 4]
-* **Broker & Routing:** Simple In-Memory Message Broker (`/topic`, `/queue`, `/app` prefixes)[cite: 2]
-* **Concurrency:** Asynchronous Task Executors with tuned core pool sizes[cite: 2]
+* **Core Framework:** Java & Spring Boot
+* **Real-time Messaging:** WebSocket with STOMP Protocol (`/ws` endpoint, SockJS fallback support)
+* **Security & Authentication:** Spring Security with JSON Web Tokens (JWT)
+* **Broker & Routing:** Simple In-Memory Message Broker (`/topic`, `/queue`, `/app` prefixes)
 
 ---
 
 ### 🚀 Technical Features
 
 #### 🔒 WebSocket Security & Connection Interception
-* **JWT Handshake Authentication:** Intercepts STOMP `CONNECT` frames via `ConnectionAuthenticationInterceptor` to extract and validate Bearer tokens before binding authenticated user principals to WebSocket sessions[cite: 2, 4].
-* **Inbound & Outbound Interception:** Registers custom pipeline interceptors on inbound and outbound client channels to handle authentication, channel authorization, and user presence tracking[cite: 2].
+* **JWT Handshake Authentication:** Intercepts STOMP `CONNECT` frames via `ConnectionAuthenticationInterceptor` to extract and validate Bearer tokens before binding authenticated user principals to WebSocket sessions
+* **Inbound & Outbound Interception:** Registers custom pipeline interceptors on inbound and outbound client channels to handle authentication, channel authorization, and user presence tracking.
 
 #### 🛡️ Channel Authorization & Access Control
-* **Pre-Send Interception:** Enforces strict permission checks via `SubscriptionCheckInterceptor` before any STOMP `SEND` command reaches destination channels[cite: 1].
-* **Membership Verification:** Verifies user membership in target channels prior to message processing[cite: 1].
+* **Pre-Send Interception:** Enforces strict permission checks via `SubscriptionCheckInterceptor` before any STOMP `SEND` command reaches destination channels.
+* **Membership Verification:** Verifies user membership in target channels prior to message processing.
 * **Block List & Ban Enforcement:**
-  * **Private Chats:** Blocks message delivery if a participant is in the recipient's block list and triggers a real-time system alert[cite: 1].
-  * **Group Chats:** Prevents banned users from broadcasting messages to group channels and dispatches system notifications[cite: 1].
+  * **Private Chats:** Blocks message delivery if a participant is in the recipient's block list and triggers a real-time system alert.
+  * **Group Chats:** Prevents banned users from broadcasting messages to group channels and dispatches system notifications.
 
 #### 📡 Real-Time User Presence & Notifications
-* **Presence Tracking:** Tracks user online/offline status using dedicated channel interceptors (`UserPresenceService`)[cite: 2].
-* **Real-Time Alert Dispatching:** Emits real-time system alerts (`NotificationService`) directly to users when message transmission attempts are rejected[cite: 1].
+* **Presence Tracking:** Tracks user online/offline status using dedicated channel interceptors.
+* **Real-Time Alert Dispatching:** Emits real-time system alerts directly to users when message transmission attempts are rejected.
 
-#### 🔐 Authentication & Token Management Endpoints Summary
+#### 🔐 Authentication Endpoints Summary
 
 | Type | Endpoint / Destination | Method | Description |
 | :--- | :--- | :---: | :--- |
@@ -36,7 +35,34 @@
 | **REST API** | `/auth/authenticate` | `POST` | **Signin:** Accepts `AuthenticationRequest` (`email`, `password`) and returns `AuthenticationResponse` containing `accessToken`, `refreshToken`, and `tokenType` (`Bearer`) |
 | **REST API** | `/auth/refreshtoken` | `POST` | **Refresh Token:** Accepts `TokenRefreshRequest` (`RefreshToken`) and returns a new `AuthenticationResponse` (may throw `TokenRefreshException` on failure) |
 ---
+## 🚀 Project Overview & Key Features
 
+A high-performance Spring Boot chat application backend combining real-time STOMP messaging over WebSockets with stateful offline synchronization, granular group access control, and dynamic channel querying[cite: 5, 6, 7].
+
+---
+
+### 💻 Key Technical Features
+
+* **Real-Time STOMP Messaging & Interactions:**
+  * **Threaded Messaging:** Processes real-time STOMP frames for standard chat delivery and threaded message replies
+  * **Message Forwarding:** Supports direct cross-channel message forwarding 
+  * **Reactions & Interactions:** Enables making message reaction validated through custom security expressions.
+
+* **Stateful Offline Sync & Message Queuing:**
+  * **Pending Message Retrieval:** Tracks unseen messages and delivers catch-up message queues to users returning online.
+  * **Asynchronous Notification Queue:** Intelligently checks subscription states for block events; delivers notifications instantly if active or persists them as `PENDING` for delivery upon user reconnection
+
+* **Dynamic Search & Paginated History:**
+  * **Filtered Channel Search:** Executes multi-criteria JPA queries using customizable filters (content, sender, timestamp).
+  * **Paginated History Retrieval:** Delivers chat history using Spring Data `Pageable` execution to optimize payload size].
+
+* **Comprehensive Group Management & Security:**
+  * **Full Group Lifecycle:** Manages group channel creation, info retrieval, self-service member departures , and group destruction.
+  * **Fine-Grained RBAC/ABAC:** Enforces administrator-only permissions (`@PreAuthorize`) for member invitations, member removals, group deletion, and user ban-list management.
+
+* **Targeted System Notifications & Real-Time Alerts:**
+  * **User-Specific Queues:** Utilizes `SimpMessagingTemplate` to push user-targeted events (such as block events and error alarms) directly to dedicated user queues.
+  * **Timestamp Tracking:** Evaluates recipient `lastOffline` timestamps to accurately flush pending notification backlogs upon session startup.
 ## Application Features
 
 - [Real-Time Messaging & Offline Catch-Up](#real-time-messaging-offline-catch-up)
