@@ -24,7 +24,7 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 
 * **Dynamic Search & Paginated History:**
   * **Filtered Channel Search:** Executes multi-criteria JPA queries using customizable filters (content, sender, timestamp).
-  * **Paginated History Retrieval:** Delivers chat history using Spring Data `Pageable` execution to optimize payload size].
+  * **Paginated History Retrieval:** Delivers chat history using Spring Data `Pageable` execution to optimize payload size.
 
 * **Comprehensive Group Management & Security:**
   * **Full Group Lifecycle:** Manages group channel creation, info retrieval, self-service member departures , and group destruction.
