@@ -1,30 +1,12 @@
 # ElzChat
 
-## Authentication — Signup & Signin (Summary)
+#### 🔐 Authentication & Token Management Endpoints Summary
 
-This project implements a JWT-based signup and signin flow exposed under the `auth` REST controller. Summary derived from the AuthenticationController and DTOs:
-
-- Endpoints
-  - `POST /auth/register` — Sign up. Accepts a RegistrationRequest with `firstname`, `lastname`, `email`, and `password`. The controller validates input (`@Valid`) and delegates the creation to `AuthenticationService`. On success it returns a simple JSON message indicating registration succeeded.
-  - `POST /auth/authenticate` — Sign in. Accepts an AuthenticationRequest with `email` and `password`. On success the controller returns an AuthenticationResponse containing `accessToken`, `refreshToken`, and `tokenType` (defaults to `Bearer`).
-  - `POST /auth/refreshtoken` — Refresh access token. Accepts a TokenRefreshRequest containing a `RefreshToken` field and returns a new AuthenticationResponse. The endpoint may throw `TokenRefreshException` when refresh fails.
-
-- DTO validation and rules
-  - RegistrationRequest: requires `firstname`, `lastname`, `email` (`@Email`) and `password` (min length 8).
-  - AuthenticationRequest: requires a valid `email` and `password` (min length 8).
-  - TokenRefreshRequest: contains a non-blank `RefreshToken` field (note capitalization).
-  - ChangePasswordRequest exists with `newPassword` validated for min length 8 and can be used when implementing password-change endpoints.
-
-- Response shape
-  - AuthenticationResponse contains `accessToken`, `refreshToken`, and `tokenType` (default `Bearer`).
-
-- Implementation notes
-  - The controller uses Jakarta Bean Validation (`@Valid`, `@NotEmpty`, `@NotNull`, `@Size`, `@Email`) to validate incoming requests.
-  - Core authentication logic (user creation, credential verification, token issuance, and refresh handling) is delegated to `AuthenticationService` (not included in the provided snippets).
-  - Tests referenced in the README validate the messaging flows and rely on the authentication stack being available for integration tests.
-
-This summary was added based on the authentication-related source files: AuthenticationController.java and DTO classes under `src/main/java/com/example/ChatApplication/auth/DTO/`.
-
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/auth/register` | `POST` | **Signup:** Accepts `RegistrationRequest` (`firstname`, `lastname`, `email`, `password`), validates input, and forwards to `AuthenticationService` returning JSON confirmation |
+| **REST API** | `/auth/authenticate` | `POST` | **Signin:** Accepts `AuthenticationRequest` (`email`, `password`) and returns `AuthenticationResponse` containing `accessToken`, `refreshToken`, and `tokenType` (`Bearer`) |
+| **REST API** | `/auth/refreshtoken` | `POST` | **Refresh Token:** Accepts `TokenRefreshRequest` (`RefreshToken`) and returns a new `AuthenticationResponse` (may throw `TokenRefreshException` on failure) |
 ---
 
 ## Application Features
