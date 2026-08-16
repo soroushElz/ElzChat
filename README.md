@@ -28,9 +28,8 @@ User A (Online)              Server                  User B (online)
       │                        │                            │
       │                        │◄── GET /messages/pending ──┤
       │                        │    (Fetch missed messages)  │
-```
 
----
+```
 
 #### 📋 Detailed Steps
 
