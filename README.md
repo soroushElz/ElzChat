@@ -1,4 +1,32 @@
 # ElzChat
+## 🛠️ Technology Stack & Key Features
+
+### 💻 Technology Stack
+
+* **Core Framework:** Java & Spring Boot[cite: 1, 2]
+* **Real-time Messaging:** WebSocket with STOMP Protocol (`/ws` endpoint, SockJS fallback support)[cite: 2]
+* **Security & Authentication:** Spring Security with JSON Web Tokens (JWT)[cite: 2, 4]
+* **Broker & Routing:** Simple In-Memory Message Broker (`/topic`, `/queue`, `/app` prefixes)[cite: 2]
+* **Concurrency:** Asynchronous Task Executors with tuned core pool sizes[cite: 2]
+
+---
+
+### 🚀 Technical Features
+
+#### 🔒 WebSocket Security & Connection Interception
+* **JWT Handshake Authentication:** Intercepts STOMP `CONNECT` frames via `ConnectionAuthenticationInterceptor` to extract and validate Bearer tokens before binding authenticated user principals to WebSocket sessions[cite: 2, 4].
+* **Inbound & Outbound Interception:** Registers custom pipeline interceptors on inbound and outbound client channels to handle authentication, channel authorization, and user presence tracking[cite: 2].
+
+#### 🛡️ Channel Authorization & Access Control
+* **Pre-Send Interception:** Enforces strict permission checks via `SubscriptionCheckInterceptor` before any STOMP `SEND` command reaches destination channels[cite: 1].
+* **Membership Verification:** Verifies user membership in target channels prior to message processing[cite: 1].
+* **Block List & Ban Enforcement:**
+  * **Private Chats:** Blocks message delivery if a participant is in the recipient's block list and triggers a real-time system alert[cite: 1].
+  * **Group Chats:** Prevents banned users from broadcasting messages to group channels and dispatches system notifications[cite: 1].
+
+#### 📡 Real-Time User Presence & Notifications
+* **Presence Tracking:** Tracks user online/offline status using dedicated channel interceptors (`UserPresenceService`)[cite: 2].
+* **Real-Time Alert Dispatching:** Emits real-time system alerts (`NotificationService`) directly to users when message transmission attempts are rejected[cite: 1].
 
 #### 🔐 Authentication & Token Management Endpoints Summary
 
