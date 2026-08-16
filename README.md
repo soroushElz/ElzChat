@@ -43,7 +43,7 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 
 
 #### 🔄 Execution Flow
-<img width="500" height="600" alt="image" src="https://github.com/user-attachments/assets/1ac50db5-99b8-4c7b-b0c5-e24789a1d57b" />
+<img width="500" height="700" alt="image" src="https://github.com/user-attachments/assets/1ac50db5-99b8-4c7b-b0c5-e24789a1d57b" />
 
 ---
 
