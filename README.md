@@ -206,4 +206,29 @@ The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in 
 | :--- | :--- | :---: | :--- |
 | **REST API** | `/api/v1/chat/{channelId}/search` | `POST` | Search and filter channel messages using dynamic criterion payloads (`CONTENT`, `WRITER_ID`, `TIME_SENT`) | 
 
+### 👥 Group Lifecycle Management (Creation, Leave, & Deletion)
+
+#### Use Case: Create Group, Manage Member Departures, and Disband Group
+
+Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group details and permanently delete/disband the group.
+
+* **Primary Actors:** Group Admin (Creator), Group Members
+* **Protocols:** REST API
+
+---
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L466-L518
+
+#### 🔄 Execution Flow
+<img width="700" height="900" alt="image" src="https://github.com/user-attachments/assets/462eac4a-b5e8-493e-95f3-cc0a46c0a8c2" />
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/group/create` | `POST` | Create a new group channel with designated initial members |
+| **REST API** | `/api/v1/group/{groupId}/leave` | `PUT` | Leave an active group channel as a regular member |
+| **REST API** | `/api/v1/group/{groupId}` | `GET` | Retrieve summary details and active member list of a group |
+| **REST API** | `/api/v1/group/{groupId}` | `DELETE` | Permanently disband and delete a group channel (Admin only) |
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
