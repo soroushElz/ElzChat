@@ -29,21 +29,7 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 * **Presence Tracking:** Tracks user online/offline status using dedicated channel interceptors.
 * **Real-Time Alert Dispatching:** Emits real-time system alerts directly to users when message transmission attempts are rejected.
 
-#### 🔐 Authentication Endpoints Summary
-
-| Type | Endpoint / Destination | Method | Description |
-| :--- | :--- | :---: | :--- |
-| **REST API** | `/auth/register` | `POST` | **Signup:** Accepts `RegistrationRequest` (`firstname`, `lastname`, `email`, `password`), validates input, and forwards to `AuthenticationService` returning JSON confirmation |
-| **REST API** | `/auth/authenticate` | `POST` | **Signin:** Accepts `AuthenticationRequest` (`email`, `password`) and returns `AuthenticationResponse` containing `accessToken`, `refreshToken`, and `tokenType` (`Bearer`) |
-| **REST API** | `/auth/refreshtoken` | `POST` | **Refresh Token:** Accepts `TokenRefreshRequest` (`RefreshToken`) and returns a new `AuthenticationResponse` (may throw `TokenRefreshException` on failure) |
----
-
-
----
-
-### 💻 Key Technical Features
-
-* **Real-Time STOMP Messaging & Interactions:**
+* * **Real-Time STOMP Messaging & Interactions:**
   * **Threaded Messaging:** Processes real-time STOMP frames for standard chat delivery and threaded message replies
   * **Message Forwarding:** Supports direct cross-channel message forwarding 
   * **Reactions & Interactions:** Enables making message reaction validated through custom security expressions.
@@ -73,6 +59,24 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 - [Message Forwarding Across Channels](#message-forwarding-across-channels)
 - [Filtered Message Search](#filtered-message-search)
 - [Group Lifecycle Management (Creation, Leave, & Deletion)](#group-lifecycle-management-creation-leave--deletion)
+
+
+
+#### 🔐 Authentication Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/auth/register` | `POST` | **Signup:** Accepts `RegistrationRequest` (`firstname`, `lastname`, `email`, `password`), validates input, and forwards to `AuthenticationService` returning JSON confirmation |
+| **REST API** | `/auth/authenticate` | `POST` | **Signin:** Accepts `AuthenticationRequest` (`email`, `password`) and returns `AuthenticationResponse` containing `accessToken`, `refreshToken`, and `tokenType` (`Bearer`) |
+| **REST API** | `/auth/refreshtoken` | `POST` | **Refresh Token:** Accepts `TokenRefreshRequest` (`RefreshToken`) and returns a new `AuthenticationResponse` (may throw `TokenRefreshException` on failure) |
+---
+
+
+---
+
+### 💻 Key Technical Features
+
+
 
 
 <a id="real-time-messaging-offline-catch-up"></a>
@@ -306,7 +310,7 @@ Allows an authenticated user to forward existing messages from a source chat cha
 ### 🔍 Filtered Message Search
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Search Channel Messages by Dynamic Criteria Filters
 
@@ -355,7 +359,7 @@ The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in 
 ### 👥 Group Lifecycle Management (Creation, Leave, & Deletion)
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Create Group, Manage Member Departures, and Disband Group
 
