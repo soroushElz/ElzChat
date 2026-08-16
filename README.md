@@ -117,7 +117,8 @@ Allows an authenticated user to retrieve a complete list of all active private c
 * **Protocols:** REST API
 ---
 #### 🧪 Integration test
- implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L328-L356
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L330-L356
+
 ---
 
 #### 🔄 Execution Flow
