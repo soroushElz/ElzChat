@@ -1,4 +1,3 @@
-Markdown
 ### 💬 Real-Time Messaging & Offline Catch-Up
 
 #### Use Case: Real-Time Private Messaging, Threaded Replies, and Pending Message Retrieval
@@ -12,19 +11,20 @@ Allows authenticated users to engage in real-time private conversations over Web
 
 #### 🔄 Execution Flow
 
-User A (Online)                   Server                     User B (Offline)
-│                                │                                │
-├────── STOMP Message ──────────►│                                │
-│   (/app/chat/{channelId})      ├─── Broadcast to Active ───────►│ (Received)
-│                                │                                │
-│                                │   [User B Disconnects]         │
-│                                │                                │
-├────── STOMP Message ──────────►│                                │
-│   (With replyTo reference)     ├─── Store as Pending ─────────► │ (Offline)
-│                                │                                │
-│                                │◄────── GET /chat/messages/pending
-│                                │        (Fetches missed messages)
-
+```
+User A (Online)              Server                  User B (Offline)
+      │                        │                            │
+      ├─── STOMP Message ─────►│                            │
+      │  (/app/chat/{id})      ├── Broadcast to Active ────►│ (Received)
+      │                        │                            │
+      │                        │   [User B Disconnects]     │
+      │                        │                            │
+      ├─── STOMP Message ─────►│                            │
+      │ (With replyTo ref)     ├── Store as Pending ───────►│ (Offline)
+      │                        │                            │
+      │                        │◄── GET /messages/pending ──┤
+      │                        │    (Fetch missed messages)  │
+```
 
 ---
 
