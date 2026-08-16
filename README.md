@@ -214,8 +214,8 @@ User A (Offline Recipient)           Server                     User B (Active S
    │                                   │─────────── 200 OK ────────────►│
    │                                   │                                │
    │   [User A Logs In / Reconnects]   │                                │
-   ├─── GET /user/notification/pending►│                                │
-   │◄── 200 OK List<Notification> ──── ┤                                │
+   ├── GET /user/notification/pending ►│                                │
+   │◄──  200 OK List<Notification> ────│                                │
    │    (BlockNotificationPayload)     │                                │
 ```
 #### 📋 Detailed Steps
