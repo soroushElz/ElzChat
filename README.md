@@ -126,7 +126,7 @@ Allows an authenticated user to initialize or establish a new 1-on-1 private cha
 #### 📋 Detailed Steps
 
 1. **Initialization Request**
-   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both `user1.getId()` and `user2.ge[...]
+   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both userIds
 
 2. **Channel Creation & Resolution**
    * **Process Channel:** The server validates the user IDs and authentication token, then creates or resolves the 1-on-1 private chat channel between the two specified participants.
@@ -183,7 +183,7 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 
 #### Use Case: User Block/Unblock Events and Blocked Message Enforcement
 
-Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules when a [...]
+Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules.
 
 * **Primary Actors:** Authenticated Users
 * **Protocols:** REST API (Block List Management), STOMP over WebSocket (Block Notifications & Error Dispatch)
@@ -278,7 +278,7 @@ Allows an authenticated user to retrieve a complete list of all active private c
 
 #### Use Case: Forward Messages Between Private Channels
 
-Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real-time[...] 
+Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real-time
 
 * **Primary Actors:** Authenticated Users (Original Sender, Forwarder, Destination Recipient)
 * **Protocols:** STOMP over WebSocket
@@ -307,7 +307,7 @@ Allows an authenticated user to forward existing messages from a source chat cha
 
 #### Use Case: Search Channel Messages by Dynamic Criteria Filters
 
-Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). Access is restricted so tha[...]
+Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). 
 
 * **Primary Actors:** Authenticated Channel Members, Non-Members (Unauthorized)
 * **Protocols:** REST API
@@ -318,7 +318,7 @@ Allows an authorized channel member to search and filter chat history within a s
 
 1. **Search Request Dispatch (Channel Member)**
    * **Submit Request:** User A sends a `POST` request to `/api/v1/chat/{channelId}/search` containing a payload array of `SearchFilters`.
-   * **Authorization & Query Execution:** The server confirms User A is a member of `{channelId}`, builds a dynamic query using the provided filter criteria, and queries the channel message repos[...]
+   * **Authorization & Query Execution:** The server confirms User A is a member of `{channelId}`, builds a dynamic query using the provided filter criteria, and queries the channel message repository.
    * **Deliver Results:** The server returns `200 OK` with a `List<ChatMessageDto>` matching all requested filter constraints simultaneously (AND logic).
 
 2. **Channel Authorization Enforcement (Non-Member)**n   * **Unauthorized Access Attempt:** User C (who is not a participant in `{channelId}`) sends a `POST` request to `/api/v1/chat/{channelId}/search`.
@@ -356,7 +356,7 @@ The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in 
 
 #### Use Case: Create Group, Manage Member Departures, and Disband Group
 
-Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group detail[...]
+Allows authenticated users to create multi-member group channels, allows group members to voluntarily leave an active group, and grants group administrators the authority to retrieve group detail
 
 * **Primary Actors:** Group Admin (Creator), Group Members
 * **Protocols:** REST API
