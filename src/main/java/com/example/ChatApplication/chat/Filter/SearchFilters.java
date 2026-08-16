@@ -1,5 +1,7 @@
-package com.example.ChatApplication.chat.repositories;
+package com.example.ChatApplication.chat.Filter;
 
+import com.example.ChatApplication.chat.Filter.FieldFilter;
+import com.example.ChatApplication.chat.Filter.Operation;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

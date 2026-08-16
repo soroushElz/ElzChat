@@ -2,7 +2,7 @@ package com.example.ChatApplication.chat.controllers;
 import com.example.ChatApplication.Commons.PageResponse;
 import com.example.ChatApplication.Exception.ChannelNotFoundException;
 import com.example.ChatApplication.chat.Dtos.*;
-import com.example.ChatApplication.chat.repositories.SearchFilters;
+import com.example.ChatApplication.chat.Filter.SearchFilters;
 import com.example.ChatApplication.chat.services.ChatService;
 import com.example.ChatApplication.user.User;
 import com.example.ChatApplication.user.dtos.UserDto;
@@ -21,7 +21,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

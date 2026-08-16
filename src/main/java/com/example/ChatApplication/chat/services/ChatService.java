@@ -5,6 +5,7 @@ import com.example.ChatApplication.Exception.IsSameUserException;
 import com.example.ChatApplication.Exception.OperationNotPermittedException;
 import com.example.ChatApplication.Notification.Status;
 import com.example.ChatApplication.chat.Dtos.*;
+import com.example.ChatApplication.chat.Filter.SearchFilters;
 import com.example.ChatApplication.chat.mappers.ChatMessageMapper;
 import com.example.ChatApplication.chat.models.*;
 import com.example.ChatApplication.chat.repositories.*;
@@ -313,7 +314,7 @@ public class ChatService {
 
     }
 
-    public List<ChatMessageDto> searchChat(String channelId, List<SearchFilters> filters,Pageable pageable) {
+    public List<ChatMessageDto> searchChat(String channelId, List<SearchFilters> filters, Pageable pageable) {
 
          boolean exists=chatChannelRepository.existsById(Long.valueOf(channelId));
          if(!exists) throw new ChannelNotFoundException("channel with id:"+channelId+" does not exists!");

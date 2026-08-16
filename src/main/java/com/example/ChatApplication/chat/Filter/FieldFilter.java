@@ -1,4 +1,4 @@
-package com.example.ChatApplication.chat.repositories;
+package com.example.ChatApplication.chat.Filter;
 
 import com.example.ChatApplication.chat.models.ChatMessage_;
 import com.example.ChatApplication.user.User_;

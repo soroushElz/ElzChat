@@ -1,9 +1,8 @@
-package com.example.ChatApplication.chat.repositories;
+package com.example.ChatApplication.chat.Filter;
 
 import com.example.ChatApplication.chat.models.ChatMessage;
 import jakarta.persistence.criteria.*;
 
-import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
 
 public enum Operation {
