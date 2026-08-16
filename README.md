@@ -13,22 +13,6 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 ---
 
 ### 🚀 Technical Features
-
-#### 🔒 WebSocket Security & Connection Interception
-* **JWT Handshake Authentication:** Intercepts STOMP `CONNECT` frames via `ConnectionAuthenticationInterceptor` to extract and validate Bearer tokens before binding authenticated user principals to WebSocket sessions
-* **Inbound & Outbound Interception:** Registers custom pipeline interceptors on inbound and outbound client channels to handle authentication, channel authorization, and user presence tracking.
-
-#### 🛡️ Channel Authorization & Access Control
-* **Pre-Send Interception:** Enforces strict permission checks via `SubscriptionCheckInterceptor` before any STOMP `SEND` command reaches destination channels.
-* **Membership Verification:** Verifies user membership in target channels prior to message processing.
-* **Block List & Ban Enforcement:**
-  * **Private Chats:** Blocks message delivery if a participant is in the recipient's block list and triggers a real-time system alert.
-  * **Group Chats:** Prevents banned users from broadcasting messages to group channels and dispatches system notifications.
-
-#### 📡 Real-Time User Presence & Notifications
-* **Presence Tracking:** Tracks user online/offline status using dedicated channel interceptors.
-* **Real-Time Alert Dispatching:** Emits real-time system alerts directly to users when message transmission attempts are rejected.
-
 * * **Real-Time STOMP Messaging & Interactions:**
   * **Threaded Messaging:** Processes real-time STOMP frames for standard chat delivery and threaded message replies
   * **Message Forwarding:** Supports direct cross-channel message forwarding 
@@ -49,6 +33,23 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 * **Targeted System Notifications & Real-Time Alerts:**
   * **User-Specific Queues:** Utilizes `SimpMessagingTemplate` to push user-targeted events (such as block events and error alarms) directly to dedicated user queues.
   * **Timestamp Tracking:** Evaluates recipient `lastOffline` timestamps to accurately flush pending notification backlogs upon session startup.
+
+#### 🔒 WebSocket Security & Connection Interception
+* **JWT Handshake Authentication:** Intercepts STOMP `CONNECT` frames via `ConnectionAuthenticationInterceptor` to extract and validate Bearer tokens before binding authenticated user principals to WebSocket sessions
+* **Inbound & Outbound Interception:** Registers custom pipeline interceptors on inbound and outbound client channels to handle authentication, channel authorization, and user presence tracking.
+
+#### 🛡️ Channel Authorization & Access Control
+* **Pre-Send Interception:** Enforces strict permission checks via `SubscriptionCheckInterceptor` before any STOMP `SEND` command reaches destination channels.
+* **Membership Verification:** Verifies user membership in target channels prior to message processing.
+* **Block List & Ban Enforcement:**
+  * **Private Chats:** Blocks message delivery if a participant is in the recipient's block list and triggers a real-time system alert.
+  * **Group Chats:** Prevents banned users from broadcasting messages to group channels and dispatches system notifications.
+
+#### 📡 Real-Time User Presence & Notifications
+* **Presence Tracking:** Tracks user online/offline status using dedicated channel interceptors.
+* **Real-Time Alert Dispatching:** Emits real-time system alerts directly to users when message transmission attempts are rejected.
+
+
 ## Usecases
 - [Real-Time Messaging & Offline Catch-Up](#real-time-messaging-offline-catch-up)
 - [Private Chat Channel Initialization](#private-chat-channel-initialization)
@@ -70,14 +71,6 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 | **REST API** | `/auth/authenticate` | `POST` | **Signin:** Accepts `AuthenticationRequest` (`email`, `password`) and returns `AuthenticationResponse` containing `accessToken`, `refreshToken`, and `tokenType` (`Bearer`) |
 | **REST API** | `/auth/refreshtoken` | `POST` | **Refresh Token:** Accepts `TokenRefreshRequest` (`RefreshToken`) and returns a new `AuthenticationResponse` (may throw `TokenRefreshException` on failure) |
 ---
-
-
----
-
-### 💻 Key Technical Features
-
-
-
 
 <a id="real-time-messaging-offline-catch-up"></a>
 ### 💬 Real-Time Messaging & Offline Catch-Up
