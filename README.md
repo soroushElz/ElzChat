@@ -1,5 +1,7 @@
 # ElzChat
-## 🛠️ Technology Stack & Key Features
+## 🚀 Project Overview & Key Features
+
+A high-performance Spring Boot chat application backend combining real-time STOMP messaging over WebSockets with stateful offline synchronization, granular group access control, and dynamic channel querying
 
 ### 💻 Technology Stack
 
@@ -35,9 +37,7 @@
 | **REST API** | `/auth/authenticate` | `POST` | **Signin:** Accepts `AuthenticationRequest` (`email`, `password`) and returns `AuthenticationResponse` containing `accessToken`, `refreshToken`, and `tokenType` (`Bearer`) |
 | **REST API** | `/auth/refreshtoken` | `POST` | **Refresh Token:** Accepts `TokenRefreshRequest` (`RefreshToken`) and returns a new `AuthenticationResponse` (may throw `TokenRefreshException` on failure) |
 ---
-## 🚀 Project Overview & Key Features
 
-A high-performance Spring Boot chat application backend combining real-time STOMP messaging over WebSockets with stateful offline synchronization, granular group access control, and dynamic channel querying[cite: 5, 6, 7].
 
 ---
 
@@ -63,8 +63,7 @@ A high-performance Spring Boot chat application backend combining real-time STOM
 * **Targeted System Notifications & Real-Time Alerts:**
   * **User-Specific Queues:** Utilizes `SimpMessagingTemplate` to push user-targeted events (such as block events and error alarms) directly to dedicated user queues.
   * **Timestamp Tracking:** Evaluates recipient `lastOffline` timestamps to accurately flush pending notification backlogs upon session startup.
-## Application Features
-
+## Usecases
 - [Real-Time Messaging & Offline Catch-Up](#real-time-messaging-offline-catch-up)
 - [Private Chat Channel Initialization](#private-chat-channel-initialization)
 - [Message Reactions & Real-Time Event Updates](#message-reactions--real-time-event-updates)
