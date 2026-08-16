@@ -14,9 +14,9 @@ Allows authenticated users to engage in real-time private conversations over Web
 The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in realistic scenarios.
 
 #### 🔄 Execution Flow
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" alt="image" style="max-width: 100%; height: auto; width: 400px;" />
-</div>
+
+ <img width="400" height="600" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
+
 
 ---
 
