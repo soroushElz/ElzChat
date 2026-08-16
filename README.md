@@ -105,4 +105,25 @@ Allows users who were offline when a notification-generating event occurred (suc
 | **REST API** | `/api/v1/user/updateBlockList` | `POST` | Update user block list (triggers pending notification if target is offline) |
 | **REST API** | `/api/v1/user/notification/pending` | `GET` | Fetch all pending notifications generated while the authenticated recipient was offline |
 
+### 📱 User Contact List & Active Chat Channel Retrieval
+
+#### Use Case: Fetch Active User Chat Channels (Contact List)
+
+Allows an authenticated user to retrieve a complete list of all active private chat channels (contacts) in which they are a participant via the REST API.
+
+* **Primary Actors:** Authenticated Users
+* **Protocols:** REST API
+
+---
+
+#### 🔄 Execution Flow
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6ddb686a-9951-48da-a3ef-cb82421d7edf" />
+
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/user/contacts` | `GET` | Retrieve all active private chat channels (contact list) associated with the authenticated user |
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
