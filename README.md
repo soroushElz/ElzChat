@@ -378,5 +378,3 @@ Allows authenticated users to create multi-member group channels, allows group m
 | **REST API** | `/api/v1/group/{groupId}` | `DELETE` | Permanently disband and delete a group channel (Admin only) |
 
 </details>
-
-This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in [...]
