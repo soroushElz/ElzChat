@@ -28,6 +28,36 @@ The integration tests run against the embedded server and messaging stack to ens
 | **STOMP Sub** | `/user/topic/chat` | `SUB` | Subscribe to receive real-time incoming messages |
 | **REST API** | `/api/v1/chat/messages/pending` | `GET` | Retrieve undelivered messages accumulated while offline |
 
+### 💬 Private Chat Channel Initialization
+
+#### Use Case: Establish Direct Private Chat Channel
+
+Allows an authenticated user to initialize or establish a new 1-on-1 private chat channel with another registered user via the REST API.
+
+* **Primary Actors:** Authenticated User (Initiator), Target User (Recipient)
+* **Protocols:** REST API
+
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L531-L548
+ 
+#### 📋 Detailed Steps
+
+1. **Initialization Request**
+   * **Submit Request:** User 1 sends an authenticated `POST` request to `/api/v1/chat/newChannel` containing a `PrivateChatInitializationDto` payload specifying both `user1.getId()` and `user2.getId()`.
+
+2. **Channel Creation & Resolution**
+   * **Process Channel:** The server validates the user IDs and authentication token, then creates or resolves the 1-on-1 private chat channel between the two specified participants.
+
+3. **Response Delivery**
+   * **Deliver Payload:** The server returns `200 OK` with an `EstablishedPrivateChannelDto` containing the initialized channel details.
+
+---
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/chat/newChannel` | `POST` | Initialize or retrieve a 1-on-1 private chat channel between two users |
 ### 👍 Message Reactions & Real-Time Event Updates
 
 #### Use Case: Add/Remove Message Reactions and Real-Time Event Broadcast
