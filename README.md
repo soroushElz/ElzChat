@@ -98,6 +98,8 @@ Allows authenticated users to manage their block lists via REST endpoints while 
  implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L231-L280
 
 #### 🔄 Execution Flow
+<img width="1086" height="1448" alt="image" src="https://github.com/user-attachments/assets/1bfbfbc9-48ab-4c40-ad51-5cae3096ccfa" />
+
 
 ```
 User A (Blocker)                  Server                     User B (Blocked)
