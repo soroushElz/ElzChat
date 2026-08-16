@@ -67,7 +67,7 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 
 #### 🔄 Execution Flow
 
-```text
+```
 User A (Reactor)                  Server                     User B (Subscriber)
    │                                │                                │
    │                                │◄────── STOMP Subscribe ────────┤
@@ -90,6 +90,8 @@ User A (Reactor)                  Server                     User B (Subscriber)
    │    (ADD Duplicate Reaction)    │                                │
    │◄── Error Response ─────────────┤                                │
    │    ("user reaction already...")│                                │
+
+```
 
 #### 📋 Detailed Steps
 
