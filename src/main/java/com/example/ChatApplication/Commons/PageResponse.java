@@ -1,5 +1,7 @@
 package com.example.ChatApplication.Commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -9,7 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageResponse<T> {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PageResponse<T>{
     private List<T> content;
     private int number;
     private int size;

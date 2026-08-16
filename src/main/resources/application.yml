@@ -1,8 +1,48 @@
+
+spring:
+
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chatApp
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+
 server:
+  port: 8088
   servlet:
     context-path: /api/v1/
-spring:
-  profiles:
-    active: dev
-springdoc:
-  default-produces-media-type: application/json
+application:
+  mailing:
+    activation-url: http://localhost:${server.port}${server.servlet.context-path}auth/activate-account
+    forget-password-url: http://localhost:${server.port}${server.servlet.context-path}auth/changePassword
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure:
+           condition: DEBUG
+        web:
+          socket: TRACE
+        messaging:
+          simp: TRACE
+

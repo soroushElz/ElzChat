@@ -1,29 +1,35 @@
 package com.example.ChatApplication.auth;
 
-import com.example.ChatApplication.Exception.ActivationTokenException;
-import com.example.ChatApplication.Exception.ChangePasswordTokenException;
 import com.example.ChatApplication.Exception.TokenRefreshException;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.mail.MessagingException;
+import com.example.ChatApplication.auth.DTO.AuthenticationRequest;
+import com.example.ChatApplication.auth.DTO.AuthenticationResponse;
+import com.example.ChatApplication.auth.DTO.RegistrationRequest;
+import com.example.ChatApplication.auth.DTO.TokenRefreshRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.Map;
+
 @RestController
 @RequestMapping("auth")
 @RequiredArgsConstructor
-@Tag(name="Authentication")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @RequestBody @Valid RegistrationRequest registrationRequest) throws MessagingException {
+            @RequestBody @Valid RegistrationRequest registrationRequest) throws JsonProcessingException {
         authenticationService.register(registrationRequest);
-        return ResponseEntity.accepted().build();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return ResponseEntity.ok(objectMapper.writeValueAsString(Map.of("message","registered successfully")));
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -33,13 +39,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(Request));
     }
 
-    @GetMapping("/activate-account")
-    public String confirm(
-            @RequestParam String token)
-            throws MessagingException, ActivationTokenException {
-        authenticationService.activateAccount(token);
-        return "user Account Enabled ";
-    }
+
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/refreshtoken")
@@ -50,19 +50,9 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/forgetPassword")
-    public String resetForgottenPassword(@RequestParam(name="email",required = true) String email) throws MessagingException {
-        authenticationService.resetForgottenPassword(email);
-        return "change password email has been sent";
-    }
 
-    @PostMapping("/changePassword")
-    public String validatePasswordChange(@RequestParam(name = "token",required = true) String token,
-                                         @Valid @RequestBody ChangePasswordRequest request)
-            throws MessagingException , ChangePasswordTokenException {
-        authenticationService.changePassword(token, request.getNewPassword());
-        return "password changed successfully!";
-    }
+
+
 
 
 }

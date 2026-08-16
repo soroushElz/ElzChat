@@ -1,14 +1,15 @@
 package com.example.ChatApplication.Security;
 
+import com.example.ChatApplication.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
       jwt=authHeader.substring(7);
       userEmail=jwtService.extractUsername(jwt);
       if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-          UserDetails userDetails=userDetailsService.loadUserByUsername(userEmail);
+          User userDetails= (User) userDetailsService.loadUserByUsername(userEmail);
           if(jwtService.isTokenValid(jwt,userDetails)){
               UsernamePasswordAuthenticationToken authToken=new UsernamePasswordAuthenticationToken(
                       userDetails,

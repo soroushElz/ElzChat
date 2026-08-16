@@ -24,7 +24,7 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    private Long id;
     @CreatedDate
     @Column(nullable = false,updatable = false)
     private LocalDateTime createdDate;
@@ -32,12 +32,6 @@ public class BaseEntity {
     @Column(insertable = false )
     private LocalDateTime lastModifiedDate;
 
-    @LastModifiedBy
-    @Column(insertable = false)
-    private Integer LastModifiedBy;
 
-    @CreatedBy
-    @Column(nullable = false,updatable = false)
-    private Integer CreatedBy;
 
 }

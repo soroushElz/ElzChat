@@ -1,50 +1,58 @@
 package com.example.ChatApplication.chat.models;
 
+import com.example.ChatApplication.chat.ChatType;
 import com.example.ChatApplication.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.engine.internal.Cascade;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name="chatChannel")
+@Getter
+@Setter
+@Table(name="chat_channel")
 public class ChatChannel {
     @NotNull
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy =GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name="userIdOne")
-    private User userOne;
+    @Enumerated(EnumType.STRING)
+    ChatType chatType;
 
-    @OneToOne
-    @JoinColumn(name="userIdTwo")
-    private User userTwo;
+
+    @ManyToMany(fetch =FetchType.EAGER)
+    @BatchSize(size = 20)
+    @JoinTable(
+            name = "chat_members",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id"))
+    private Set<User> chatMembers=new HashSet<>();
+
+
+
+    public void addUser(User user){
+        this.chatMembers.add(user);
+        user.getChats().add(this);
+    }
+
+    public void removeUser(User user){
+        this.chatMembers.remove(user);
+        user.getChats().remove(this);
+    }
 
     public ChatChannel(){
     }
 
-    public ChatChannel(User userOne,User UserTwo){
-        this.userOne=userOne;
-        this.userTwo=UserTwo;
-    }
 
-    public Long getId() {
-        return id;
-    }
 
-    public User getUserOne() {
-        return userOne;
-    }
 
-    public User getUserTwo() {
-        return userTwo;
-    }
-
-    public void setUserTwo(User userTwo) {
-        this.userTwo = userTwo;
-    }
-
-    public void setUserOne(User userOne) {
-        this.userOne = userOne;
-    }
 }

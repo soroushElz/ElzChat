@@ -1,22 +1,19 @@
 package com.example.ChatApplication.chat.Dtos;
 
+import com.example.ChatApplication.chat.ChatType;
 import com.example.ChatApplication.user.dtos.UserDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
+import java.util.List;
+
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatChannelDto {
-    UserDto userOne;
-    UserDto userTwo;
-    Long ChannelId;
-
-    public ChatChannelDto(){}
 
 
-    public ChatChannelDto(UserDto userDtoOne, UserDto userDtoTwo, Long id) {
-        this.userOne=userDtoOne;
-        this.userTwo=userDtoTwo;
-        this.ChannelId=id;
-    }
+    private  List<UserDto> users;
+    private  ChatType type;
+    private Long channelId;
+    private  String name;
 }

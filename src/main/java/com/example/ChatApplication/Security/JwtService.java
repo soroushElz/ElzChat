@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Slf4j
 public class JwtService {
 
 
@@ -23,6 +26,7 @@ public class JwtService {
     private String secretKey;
     @Value("${application.security.jwt.expiration}")
     private String expirationTime;
+
 
     public String GenerateToken(UserDetails userDetail){
         return GenerateToken(new HashMap<>(),userDetail);
@@ -45,11 +49,11 @@ public class JwtService {
                 .toList();
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+expirationTime))
-                .setSubject(userDetail.getUsername())
-                .claim("authorities",authorities)
-                .signWith(getSigningKey())
+                 .setIssuedAt(new Date(System.currentTimeMillis()))
+                  .setExpiration(new Date(System.currentTimeMillis()+expirationTime))
+                   .setSubject(userDetail.getUsername())
+                    .claim("authorities",authorities)
+                     .signWith(getSigningKey())
                 .compact();
     }
 
@@ -67,6 +71,7 @@ public class JwtService {
     }
 
     public String extractUsername(String jwt) {
+
         return extractClaim(jwt, Claims::getSubject);
     }
 
@@ -75,7 +80,7 @@ public class JwtService {
        return  claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String jwt) {
+    private Claims extractAllClaims(String jwt)  {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()

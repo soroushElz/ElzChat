@@ -1,39 +1,63 @@
 package com.example.ChatApplication.chat.Dtos;
 
+import com.example.ChatApplication.chat.models.ReactionAggregate;
+import com.example.ChatApplication.user.dtos.UserDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.annotation.Nullable;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
 public class ChatMessageDto {
 
-    private String contents;
-    private Long fromUserId;
-    private Long toUserId;
-
-    public String getContents() {
-        return contents;
+    @Override
+    public String toString() {
+        return "ChatMessageDto{" +
+                "content='" + content + '\'' +
+                ", timeSent=" + timeSent +
+                ", senderDto=" + senderDto +
+                ", destinationChannelId=" + destinationChannelId +
+                ", forwarded=" + forwarded +
+                ", messageId=" + messageId +
+                 (ReplyTo!=null?", ReplyTo="+ ReplyTo :"") +
+                (originalSender!=null?", originalSender="+ originalSender :"") +
+                (reactions!=null?", reactions="+ reactions :"") +
+                '}';
     }
 
-    public ChatMessageDto(Long fromUserId,Long toUserId,String contents){
-        this.fromUserId=fromUserId;
-        this.toUserId=toUserId;
-        this.contents=contents;
+    public ChatMessageDto() {}
 
-    }
+    private  String content;
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
+    private LocalDateTime timeSent;
 
-    public Long getFromUserId() {
-        return fromUserId;
-    }
+    private  UserDto senderDto;
 
-    public void setFromUserId(Long fromUserId) {
-        this.fromUserId = fromUserId;
-    }
+    private  Long destinationChannelId;
+   private  boolean forwarded;
+   @Nullable
+    private  Long messageId;
+    @Nullable
+    private  Long ReplyTo;
+    @Nullable
+    private  UserDto originalSender;
+    @Nullable
+    private  List<ReactionAggregate> reactions;
 
-    public Long getToUserId() {
-        return toUserId;
-    }
 
-    public void setToUserId(Long toUserId) {
-        this.toUserId = toUserId;
-    }
+
+
+    ////Response
+
+
+
+
 }

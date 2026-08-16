@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 @Configuration
 @AllArgsConstructor
@@ -36,9 +39,10 @@ public class BeansConfig {
     }
 
     @Bean
-    AuditorAware<Integer> auditorAware(){
+    AuditorAware<Long> auditorAware(){
         return new ApplicationAuditAware();
     }
+
 
 
 }

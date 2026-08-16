@@ -24,18 +24,10 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    private Integer id;
+    private Long id;
     @Column(unique = true)
     private String name;
-    @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
-    private List<User> userList;
-    @CreatedDate
-    @Column(nullable = false,updatable = false)
-    private LocalDateTime createdDate;
-    @LastModifiedDate
-    @Column(insertable = false )
-    private LocalDateTime lastModifiedDate;
+
 
 
 }
