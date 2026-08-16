@@ -50,3 +50,11 @@ User A (Online)              Server                  User B (online)
 | **STOMP Send** | `/app/chat/{channelId}` | `SEND` | Send a new message or reply to a private channel |
 | **STOMP Sub** | `/user/topic/chat` | `SUB` | Subscribe to receive real-time incoming messages |
 | **REST API** | `/api/v1/chat/messages/pending` | `GET` | Retrieve undelivered messages accumulated while offline |
+
+---
+
+#### 🧪 Integration tests (end-to-end)
+
+This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIt` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users.
+
+The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in realistic scenarios.
