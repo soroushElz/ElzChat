@@ -92,4 +92,31 @@ User A (Reactor)                  Server                     User B (Subscriber)
    │◄── Error Response ─────────────┤                                │
    │    ("user reaction already...")│                                │
 
+#### 📋 Detailed Steps
+
+1. **Subscription Setup**
+   * Active channel members establish JWT-authenticated STOMP connections and subscribe to their personal event queue: `/user/queue/events`.
+
+2. **Add Reaction & Event Dispatch**
+   * **Submit Reaction:** User A issues a `POST` request to `/api/v1/message/{messageId}/reaction` with payload `{"reactionType": "LIKE", "action": "ADD"}`.
+   * **Acknowledge Sender:** Server validates, persists the reaction, and returns `200 OK` with a `ReactionAckResponseDto`.
+   * **Broadcast Update:** Server pushes a real-time STOMP event payload containing the reaction details to User B via `/user/queue/events`.
+
+3. **Remove Reaction**
+   * **Submit Removal:** User A sends a `POST` request with payload `{"reactionType": "LIKE", "action": "REMOVE"}`.
+   * **Acknowledge & Delete:** Server removes the reaction entry and returns a successful `ReactionAckResponseDto`.
+
+4. **Validation & Edge Case Handling**
+   * **Non-Existent Reaction:** Attempting to remove a non-existent reaction returns an error response: `{"error": "reaction does not exists"}`.
+   * **Duplicate Reaction:** Attempting to add a reaction when one already exists for that user returns an error response: `{"error": "user reaction already exists!"}`.
+
+---
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/message/{messageId}/reaction` | `POST` | Add or remove an emoji reaction on a target message |
+| **STOMP Sub** | `/user/queue/events` | `SUB` | Receive real-time notification events for reaction changes |
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
