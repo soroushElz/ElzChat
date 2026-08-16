@@ -194,7 +194,7 @@ The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in 
 * **Sender Filtering (`WRITER_ID` | `EQ`):**
   * Performs an exact equality match (`EQ`) on the sender's user ID.
   * *Example:* Restricts search results exclusively to messages authored by a specific user.
-* **Date Range Filtering (`TIME_SENT` | `DURING`):**
+* **Date Range Filtering (`TIME_SENT` | `DURING`,`LT`,`GT`):**
   * Evaluates timestamps against a date window (`DURING`).
   * *Example:* Matches messages sent within a specific 24-hour day window (between `00:00:00` and `23:59:59` of the target date).
 
