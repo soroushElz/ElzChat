@@ -1,4 +1,4 @@
-## Table of Contents
+## Application Features
 
 - [Real-Time Messaging & Offline Catch-Up](#real-time-messaging-offline-catch-up)
 - [Private Chat Channel Initialization](#private-chat-channel-initialization)
