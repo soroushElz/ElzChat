@@ -8,7 +8,7 @@ Allows authenticated users to engage in real-time private conversations over Web
 * **Protocols:** STOMP over WebSocket (Real-Time), REST API (Catch-Up)
 
 ---
-#### 🧪 Integration tests (end-to-end)
+#### 🧪 Integration test
  implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L108-L172
 
 The integration tests run against the embedded server and messaging stack to ensure the full stack (authentication, WebSocket/STOMP endpoints, persistence, and REST catch-up) behaves correctly in realistic scenarios.
