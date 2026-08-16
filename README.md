@@ -55,4 +55,41 @@ User A (Online)              Server                  User B (online)
 | **STOMP Sub** | `/user/topic/chat` | `SUB` | Subscribe to receive real-time incoming messages |
 | **REST API** | `/api/v1/chat/messages/pending` | `GET` | Retrieve undelivered messages accumulated while offline |
 
+### 👍 Message Reactions & Real-Time Event Updates
+
+#### Use Case: Add/Remove Message Reactions and Real-Time Event Broadcast
+
+Allows authenticated users to add or remove emoji reactions on channel messages via REST endpoints, while broadcasting real-time reaction updates to subscribed channel members over WebSocket queues and validating reaction state constraints.
+
+* **Primary Actors:** Authenticated Users
+* **Protocols:** REST API (Reaction Actions), STOMP over WebSocket (Event Notifications)
+
+---
+
+#### 🔄 Execution Flow
+
+```text
+User A (Reactor)                  Server                     User B (Subscriber)
+   │                                │                                │
+   │                                │◄────── STOMP Subscribe ────────┤
+   │                                │     (/user/queue/events)       │
+   │                                │                                │
+   ├─── POST /message/{id}/reaction►│                                │
+   │    (Action: ADD, Type: LIKE)   ├────── STOMP Event Update ─────►│ (Received)
+   │◄── 200 OK (ReactionAck) ───────┤   (ReactionAckResponseDto)     │
+   │                                │                                │
+   ├─── POST /message/{id}/reaction►│                                │
+   │    (Action: REMOVE, Type: LIKE)│                                │
+   │◄── 200 OK (ReactionAck) ───────┤                                │
+   │                                │                                │
+   ├─── POST /message/{id}/reaction►│                                │
+   │    (REMOVE Non-Existent)       │                                │
+   │◄── Error Response ─────────────┤                                │
+   │    ("reaction does not exists")│                                │
+   │                                │                                │
+   ├─── POST /message/{id}/reaction►│                                │
+   │    (ADD Duplicate Reaction)    │                                │
+   │◄── Error Response ─────────────┤                                │
+   │    ("user reaction already...")│                                │
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
