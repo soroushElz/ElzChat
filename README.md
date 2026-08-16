@@ -16,19 +16,6 @@ The integration tests run against the embedded server and messaging stack to ens
 #### 🔄 Execution Flow
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
 
-#### 📋 Detailed Steps
-
-1. **Session Setup & Connection**
-   * Users establish JWT-authenticated STOMP sessions and subscribe to their personal destination: `/user/topic/chat`.
-
-2. **Real-Time Exchange & Threading**
-   * **Send Message:** Users post messages to `/app/chat/{channelId}`. Active subscribers receive the payload instantaneously.
-   * **Threaded Reply:** Users post messages referencing a parent `messageId` (`replyTo`). The server links the payload to the original message before broadcasting.
-
-3. **Offline Messaging & Synchronization**
-   * **Disconnected State:** Messages sent to an offline user are automatically captured and saved in the database as pending.
-   * **Pending Catch-Up:** Upon reconnecting, users issue a `GET` request to `/api/v1/chat/messages/pending` (optionally passing `?channelId={id}`) to fetch all missed messages sent while offline.
-
 ---
 
 #### 📡 API & Socket Endpoints Summary
@@ -56,25 +43,6 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 #### 🔄 Execution Flow
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1ac50db5-99b8-4c7b-b0c5-e24789a1d57b" />
 
-
-#### 📋 Detailed Steps
-
-1. **Subscription Setup**
-   * Active channel members establish JWT-authenticated STOMP connections and subscribe to their personal event queue: `/user/queue/events`.
-
-2. **Add Reaction & Event Dispatch**
-   * **Submit Reaction:** User A issues a `POST` request to `/api/v1/message/{messageId}/reaction` with payload `{"reactionType": "LIKE", "action": "ADD"}`.
-   * **Acknowledge Sender:** Server validates, persists the reaction, and returns `200 OK` with a `ReactionAckResponseDto`.
-   * **Broadcast Update:** Server pushes a real-time STOMP event payload containing the reaction details to User B via `/user/queue/events`.
-
-3. **Remove Reaction**
-   * **Submit Removal:** User A sends a `POST` request with payload `{"reactionType": "LIKE", "action": "REMOVE"}`.
-   * **Acknowledge & Delete:** Server removes the reaction entry and returns a successful `ReactionAckResponseDto`.
-
-4. **Validation & Edge Case Handling**
-   * **Non-Existent Reaction:** Attempting to remove a non-existent reaction returns an error response: `{"error": "reaction does not exists"}`.
-   * **Duplicate Reaction:** Attempting to add a reaction when one already exists for that user returns an error response: `{"error": "user reaction already exists!"}`.
-
 ---
 
 #### 📡 API & Socket Endpoints Summary
@@ -99,25 +67,6 @@ Allows authenticated users to manage their block lists via REST endpoints while 
 
 #### 🔄 Execution Flow
 <img width="1086" height="1448" alt="image" src="https://github.com/user-attachments/assets/1bfbfbc9-48ab-4c40-ad51-5cae3096ccfa" />
-
-#### 📋 Detailed Steps
-
-1. **Subscription Setup**
-   * User B establishes a JWT-authenticated STOMP session and subscribes to two personal event destinations:
-     * **Block Notifications:** `/user/queue/notification/block`
-     * **Error Notifications:** `/user/queue/notification/error`
-
-2. **Blocking a User & Real-Time Event Dispatch**
-   * **Submit Block Request:** User A issues a `POST` request to `/api/v1/user/updateBlockList` with User B's ID in the block list payload.
-   * **Broadcast Block Event:** The server processes the block request and immediately pushes a `BlockNotificationPayload` to User B's `/user/queue/notification/block` topic, identifying User A as the blocker and User B as the blocked user.
-
-3. **Message Rejection & Error Dispatch**
-   * **Attempt Message Send:** Blocked User B attempts to send a STOMP chat message to `/app/chat/{channelId}`.
-   * **Block Enforcement:** The server identifies the active block restriction, intercepts the message, and pushes an `ErrorNotificationPayload` to User B's `/user/queue/notification/error` destination stating `"you are blocked!"`.
-
-4. **Unblocking a User & Event Dispatch**
-   * **Submit Unblock Request:** User A issues a `POST` request to `/api/v1/user/updateBlockList` specifying User B's ID to be removed from the block list.
-   * **Broadcast Unblock Event:** The server updates the block status and dispatches an unblock notification (`Action: UNBLOCK`) to User B's `/user/queue/notification/block` topic.
 
 ---
 
@@ -146,20 +95,6 @@ Allows users who were offline when a notification-generating event occurred (suc
 
 #### 🔄 Execution Flow
 <img width="1086" height="1448" alt="image" src="https://github.com/user-attachments/assets/1d5fd0c0-aed5-44bb-98bd-baa2df0e1cdc" />
-
-
-#### 📋 Detailed Steps
-
-1. **Offline State Identification**
-   * User A has been offline for a period of time (e.g., recorded last offline timestamp in database).
-
-2. **Event Trigger & Pending Persistence**
-   * **Trigger Event:** Active User B issues a `POST` request to `/api/v1/user/updateBlockList` adding User A to their block list.
-   * **Store Pending Notification:** Detecting that User A is offline, the server encapsulates the block event into a `Notification` object with a `BlockNotificationPayload` and stores it with a pending status assigned to recipient User A.
-
-3. **Pending Notification Retrieval**
-   * **Fetch Missed Notifications:** Upon reconnecting, User A sends an authenticated `GET` request to `/api/v1/user/notification/pending`.
-   * **Deliver Payloads:** The server queries and returns all unread pending notifications, allowing User A to inspect the notification details (`blockedUser`, `blockedBy`, and `recipientId`).
 
 ---
 
