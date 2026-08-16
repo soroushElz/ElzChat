@@ -54,32 +54,8 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 
 
 #### 🔄 Execution Flow
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1ac50db5-99b8-4c7b-b0c5-e24789a1d57b" />
 
-```
-User A (Reactor)                  Server                     User B (Subscriber)
-   │                                │                                │
-   │                                │◄────── STOMP Subscribe ────────┤
-   │                                │     (/user/queue/events)       │
-   │                                │                                │
-   ├─── POST /message/{id}/reaction►│                                │
-   │    (Action: ADD, Type: LIKE)   ├────── STOMP Event Update ─────►│ (Received)
-   │◄── 200 OK (ReactionAck) ───────┤   (ReactionAckResponseDto)     │
-   │                                │                                │
-   ├─── POST /message/{id}/reaction►│                                │
-   │    (Action: REMOVE, Type: LIKE)│                                │
-   │◄── 200 OK (ReactionAck) ───────┤                                │
-   │                                │                                │
-   ├─── POST /message/{id}/reaction►│                                │
-   │    (REMOVE Non-Existent)       │                                │
-   │◄── Error Response ─────────────┤                                │
-   │    ("reaction does not exists")│                                │
-   │                                │                                │
-   ├─── POST /message/{id}/reaction►│                                │
-   │    (ADD Duplicate Reaction)    │                                │
-   │◄── Error Response ─────────────┤                                │
-   │    ("user reaction already...")│                                │
-
-```
 
 #### 📋 Detailed Steps
 
