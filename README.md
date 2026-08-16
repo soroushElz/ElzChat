@@ -30,6 +30,8 @@ User A (Online)              Server                  User B (online)
       │                        │    (Fetch missed messages)  │
 
 ```
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
+
 
 #### 📋 Detailed Steps
 
