@@ -15,7 +15,7 @@ The integration tests run against the embedded server and messaging stack to ens
 
 #### 🔄 Execution Flow
 
- <img width="500" height="700" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
+ <img width="600" height="750" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
 
 
 ---
@@ -43,7 +43,7 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 
 
 #### 🔄 Execution Flow
-<img width="500" height="700" alt="image" src="https://github.com/user-attachments/assets/1ac50db5-99b8-4c7b-b0c5-e24789a1d57b" />
+<img width="600" height="700" alt="image" src="https://github.com/user-attachments/assets/1ac50db5-99b8-4c7b-b0c5-e24789a1d57b" />
 
 ---
 
@@ -68,7 +68,7 @@ Allows authenticated users to manage their block lists via REST endpoints while 
  implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L231-L280
 
 #### 🔄 Execution Flow
-<img width="500" height="750" alt="image" src="https://github.com/user-attachments/assets/1bfbfbc9-48ab-4c40-ad51-5cae3096ccfa" />
+<img width="600" height="750" alt="image" src="https://github.com/user-attachments/assets/1bfbfbc9-48ab-4c40-ad51-5cae3096ccfa" />
 
 ---
 
@@ -96,7 +96,7 @@ Allows users who were offline when a notification-generating event occurred (suc
 
 
 #### 🔄 Execution Flow
-<img width="500" height="750" alt="image" src="https://github.com/user-attachments/assets/1d5fd0c0-aed5-44bb-98bd-baa2df0e1cdc" />
+<img width="600" height="750" alt="image" src="https://github.com/user-attachments/assets/1d5fd0c0-aed5-44bb-98bd-baa2df0e1cdc" />
 
 ---
 
@@ -122,7 +122,7 @@ Allows an authenticated user to retrieve a complete list of all active private c
 ---
 
 #### 🔄 Execution Flow
-<img width="500" height="750" alt="image" src="https://github.com/user-attachments/assets/6ddb686a-9951-48da-a3ef-cb82421d7edf" />
+<img width="600" height="750" alt="image" src="https://github.com/user-attachments/assets/6ddb686a-9951-48da-a3ef-cb82421d7edf" />
 
 
 #### 📡 API & Socket Endpoints Summary
@@ -144,7 +144,7 @@ Allows an authenticated user to forward existing messages from a source chat cha
  implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L360-L399
 
 #### 🔄 Execution Flow
-<img width="500" height="750" alt="image" src="https://github.com/user-attachments/assets/e0b52283-198f-4536-9535-3953cec1b1f3" />
+<img width="600" height="750" alt="image" src="https://github.com/user-attachments/assets/e0b52283-198f-4536-9535-3953cec1b1f3" />
 
 
 #### 📡 API & Socket Endpoints Summary
