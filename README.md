@@ -154,4 +154,56 @@ Allows an authenticated user to forward existing messages from a source chat cha
 | **STOMP Send** | `/app/chat/{destinationChannelId}/forward` | `SEND` | Forward existing messages from a source channel to a destination channel |
 | **STOMP Sub** | `/user/topic/chat` | `SUB` | Receive real-time incoming messages, including forwarded messages |
 
+### 🔍 Filtered Message Search
+
+#### Use Case: Search Channel Messages by Dynamic Criteria Filters
+
+Allows an authorized channel member to search and filter chat history within a specific channel using dynamic criteria (keyword content, message writer_id, and date ). Access is restricted so that non-channel members receive a `403 Forbidden` response.
+
+* **Primary Actors:** Authenticated Channel Members, Non-Members (Unauthorized)
+* **Protocols:** REST API
+----
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L401-L463
+ #### 📋 Detailed Steps
+
+1. **Search Request Dispatch (Channel Member)**
+   * **Submit Search:** User A sends a `POST` request to `/api/v1/chat/{channelId}/search` containing a payload array of `SearchFilters`.
+   * **Authorization & Query Execution:** The server confirms User A is a member of `{channelId}`, builds a dynamic query using the provided filter criteria, and queries the channel message repository.
+   * **Deliver Results:** The server returns `200 OK` with a `List<ChatMessageDto>` matching all requested filter constraints simultaneously (AND logic).
+
+2. **Channel Authorization Enforcement (Non-Member)**
+   * **Unauthorized Access Attempt:** User C (who is not a participant in `{channelId}`) sends a `POST` request to `/api/v1/chat/{channelId}/search`.
+   * **Access Rejection:** The server detects that User C lacks channel membership and immediately returns a `403 Forbidden` response without exposing channel data.
+
+---
+
+#### 🛠️ Search Filter Mechanics Explained
+
+The search endpoint accepts a list of filter objects (`List<SearchFilters>`) in the request body to construct dynamic JPA queries. Each filter object consists of three key properties:
+
+* **`field` (`FieldFilter`):** Identifies the target database field to evaluate.
+* **`value` (`String`):** The value or string criteria to match against.
+* **`operation` (`Operation`):** The comparison operator used for filtering.
+
+##### Filters 
+
+* **Content Search (`CONTENT` | `LIKE`):**
+  * Performs a partial text match/keyword search on the body of the message.
+  * *Example:* Matches any message containing the substring `"text1..."`.
+* **Sender Filtering (`WRITER_ID` | `EQ`):**
+  * Performs an exact equality match (`EQ`) on the sender's user ID.
+  * *Example:* Restricts search results exclusively to messages authored by a specific user.
+* **Date Range Filtering (`TIME_SENT` | `DURING`):**
+  * Evaluates timestamps against a date window (`DURING`).
+  * *Example:* Matches messages sent within a specific 24-hour day window (between `00:00:00` and `23:59:59` of the target date).
+
+---
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/chat/{channelId}/search` | `POST` | Search and filter channel messages using dynamic criterion payloads (`CONTENT`, `WRITER_ID`, `TIME_SENT`) | 
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
