@@ -64,6 +64,9 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 * **Protocols:** REST API (Reaction Actions), STOMP over WebSocket (Event Notifications)
 
 ---
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L175-L226
+
 
 #### 🔄 Execution Flow
 
