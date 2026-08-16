@@ -123,4 +123,69 @@ User A (Reactor)                  Server                     User B (Subscriber)
 | **REST API** | `/api/v1/message/{messageId}/reaction` | `POST` | Add or remove an emoji reaction on a target message |
 | **STOMP Sub** | `/user/queue/events` | `SUB` | Receive real-time notification events for reaction changes |
 
+### 🚫 User Blocking, Real-Time Notifications & Message Restriction
+
+#### Use Case: User Block/Unblock Events and Blocked Message Enforcement
+
+Allows authenticated users to manage their block lists via REST endpoints while automatically notifying blocked users in real-time over WebSocket queues and enforcing message restriction rules when a blocked user attempts to communicate.
+
+* **Primary Actors:** Authenticated Users
+* **Protocols:** REST API (Block List Management), STOMP over WebSocket (Block Notifications & Error Dispatch)
+
+---
+
+#### 🔄 Execution Flow
+
+```
+User A (Blocker)                  Server                     User B (Blocked)
+   │                                │                                │
+   │                                │◄── STOMP Subscribe Block Queue ┤
+   │                                │    (/user/queue/notif/block)   │
+   │                                │◄── STOMP Subscribe Error Queue ┤
+   │                                │    (/user/queue/notif/error)   │
+   │                                │                                │
+   ├─── POST /user/updateBlockList ►│                                │
+   │    (Block: User B)             ├────── STOMP Block Event ──────►│ (Received)
+   │◄── 200 OK ─────────────────────┤    (BlockedBy: A, Blocked: B)  │
+   │                                │                                │
+   │                                │◄───── STOMP Send /app/chat ────┤
+   │                                │       (Attempt message send)   │
+   │                                ├────── STOMP Error Event ──────►│ (Received)
+   │                                │       ("you are blocked!")     │
+   │                                │                                │
+   ├─── POST /user/updateBlockList ►│                                │
+   │    (Unblock: User B)           ├────── STOMP Unblock Event ────►│ (Received)
+   │◄── 200 OK ─────────────────────┤    (Action: UNBLOCK)           │
+```
+#### 📋 Detailed Steps
+
+1. **Subscription Setup**
+   * User B establishes a JWT-authenticated STOMP session and subscribes to two personal event destinations:
+     * **Block Notifications:** `/user/queue/notification/block`
+     * **Error Notifications:** `/user/queue/notification/error`
+
+2. **Blocking a User & Real-Time Event Dispatch**
+   * **Submit Block Request:** User A issues a `POST` request to `/api/v1/user/updateBlockList` with User B's ID in the block list payload.
+   * **Broadcast Block Event:** The server processes the block request and immediately pushes a `BlockNotificationPayload` to User B's `/user/queue/notification/block` topic, identifying User A as the blocker and User B as the blocked user.
+
+3. **Message Rejection & Error Dispatch**
+   * **Attempt Message Send:** Blocked User B attempts to send a STOMP chat message to `/app/chat/{channelId}`.
+   * **Block Enforcement:** The server identifies the active block restriction, intercepts the message, and pushes an `ErrorNotificationPayload` to User B's `/user/queue/notification/error` destination stating `"you are blocked!"`.
+
+4. **Unblocking a User & Event Dispatch**
+   * **Submit Unblock Request:** User A issues a `POST` request to `/api/v1/user/updateBlockList` specifying User B's ID to be removed from the block list.
+   * **Broadcast Unblock Event:** The server updates the block status and dispatches an unblock notification (`Action: UNBLOCK`) to User B's `/user/queue/notification/block` topic.
+
+---
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/user/updateBlockList` | `POST` | Update user block list (add/remove users from block set) |
+| **STOMP Sub** | `/user/queue/notification/block` | `SUB` | Receive real-time notifications for block and unblock events |
+| **STOMP Sub** | `/user/queue/notification/error` | `SUB` | Receive real-time error messages (e.g., blocked message attempt failures) |
+| **STOMP Send** | `/app/chat/{channelId}` | `SEND` | Attempt chat message delivery to a target channel |
+
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
