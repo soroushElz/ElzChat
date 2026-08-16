@@ -206,17 +206,17 @@ Allows users who were offline when a notification-generating event occurred (suc
 #### 🔄 Execution Flow
 
 ```
-User A (Offline Recipient)        Server                     User B (Active Sender)
-   │                                │                                │
-   │   [User A Offline for 1+ Day]  │◄── POST /user/updateBlockList ─┤
-   │                                │    (Block User A)              │
-   │                                ├─── Persist Pending Notification│
-   │                                │─────────── 200 OK ────────────►│
-   │                                │                                │
-   │   [User A Logs In / Reconnects]│                                │
-   ├─── GET /user/notification/pending►                            │
-   │◄── 200 OK List<Notification> ──┤                                │
-   │    (BlockNotificationPayload)  │                                │
+User A (Offline Recipient)           Server                     User B (Active Sender)
+   │                                   │                                │
+   │   [User A Offline for 1+ Day]     │◄── POST /user/updateBlockList ─┤
+   │                                   │    (Block User A)              │
+   │                                   ├─── Persist Pending Notification│
+   │                                   │─────────── 200 OK ────────────►│
+   │                                   │                                │
+   │   [User A Logs In / Reconnects]   │                                │
+   ├─── GET /user/notification/pending►│                                │
+   │◄── 200 OK List<Notification> ──── ┤                                │
+   │    (BlockNotificationPayload)     │                                │
 ```
 #### 📋 Detailed Steps
 
