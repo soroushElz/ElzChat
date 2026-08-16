@@ -12,7 +12,7 @@ Allows authenticated users to engage in real-time private conversations over Web
 #### 🔄 Execution Flow
 
 ```
-User A (Online)              Server                  User B (Offline)
+User A (Online)              Server                  User B (online)
       │                        │                            │
       ├─── STOMP Message ─────►│                            │
       │  (/app/chat/{id})      ├── Broadcast to Active ────►│ (Received)
