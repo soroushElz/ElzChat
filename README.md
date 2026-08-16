@@ -15,7 +15,7 @@ The integration tests run against the embedded server and messaging stack to ens
 
 #### 🔄 Execution Flow
 
- <img width="400" height="600" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
+ <img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/5762f0f4-8a8e-4657-8e5a-754acef865f7" />
 
 
 ---
