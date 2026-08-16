@@ -15,7 +15,7 @@
 ### 💬 Real-Time Messaging & Offline Catch-Up
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Real-Time Private Messaging, Threaded Replies, and Pending Message Retrieval
 
@@ -50,7 +50,7 @@ The integration tests run against the embedded server and messaging stack to ens
 ### 💬 Private Chat Channel Initialization
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Establish Direct Private Chat Channel
 
@@ -87,7 +87,7 @@ Allows an authenticated user to initialize or establish a new 1-on-1 private cha
 <a id="message-reactions--real-time-event-updates"></a>
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Add/Remove Message Reactions and Real-Time Event Broadcast
 
@@ -119,7 +119,7 @@ Allows authenticated users to add or remove emoji reactions on channel messages 
 ### 🚫 User Blocking, Real-Time Notifications & Message Restriction
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: User Block/Unblock Events and Blocked Message Enforcement
 
@@ -152,7 +152,7 @@ Allows authenticated users to manage their block lists via REST endpoints while 
 ### 🔔 Offline Notification Catch-Up & Pending Event Synchronization
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Offline Recipient Pending Notification Retrieval
 
@@ -184,7 +184,7 @@ Allows users who were offline when a notification-generating event occurred (suc
 ### 📱 User Contact List & Active Chat Channel Retrieval
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Fetch Active User Chat Channels (Contact List)
 
@@ -214,7 +214,7 @@ Allows an authenticated user to retrieve a complete list of all active private c
 ### ⏩ Message Forwarding Across Channels
 
 <details>
-<summary>Summary & Details</summary>
+<summary>Details</summary>
 
 #### Use Case: Forward Messages Between Private Channels
 
