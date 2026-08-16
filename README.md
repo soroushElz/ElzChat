@@ -131,4 +131,27 @@ Allows an authenticated user to retrieve a complete list of all active private c
 | :--- | :--- | :---: | :--- |
 | **REST API** | `/api/v1/user/contacts` | `GET` | Retrieve all active private chat channels (contact list) associated with the authenticated user |
 
+### ⏩ Message Forwarding Across Channels
+
+#### Use Case: Forward Messages Between Private Channels
+
+Allows an authenticated user to forward existing messages from a source chat channel to a destination chat channel. The recipient in the destination channel receives the forwarded message in real-time, marked with `isForwarded = true`, preserving both the original sender and forwarder metadata.
+
+* **Primary Actors:** Authenticated Users (Original Sender, Forwarder, Destination Recipient)
+* **Protocols:** STOMP over WebSocket
+---
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L360-L399
+
+#### 🔄 Execution Flow
+<img width="500" height="750" alt="image" src="https://github.com/user-attachments/assets/e0b52283-198f-4536-9535-3953cec1b1f3" />
+
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **STOMP Send** | `/app/chat/{destinationChannelId}/forward` | `SEND` | Forward existing messages from a source channel to a destination channel |
+| **STOMP Sub** | `/user/topic/chat` | `SUB` | Receive real-time incoming messages, including forwarded messages |
+
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
