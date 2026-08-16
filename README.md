@@ -189,5 +189,55 @@ User A (Blocker)                  Server                     User B (Blocked)
 | **STOMP Sub** | `/user/queue/notification/error` | `SUB` | Receive real-time error messages (e.g., blocked message attempt failures) |
 | **STOMP Send** | `/app/chat/{channelId}` | `SEND` | Attempt chat message delivery to a target channel |
 
+### 🔔 Offline Notification Catch-Up & Pending Event Synchronization
+
+#### Use Case: Offline Recipient Pending Notification Retrieval
+
+Allows users who were offline when a notification-generating event occurred (such as being blocked by another user) to retrieve all queued pending notifications via REST API upon reconnecting.
+
+* **Primary Actors:** Authenticated Users (Offline Recipient, Active Sender)
+* **Protocols:** REST API
+
+---
+#### 🧪 Integration test
+ implementation here: https://github.com/soroushElz/ElzChat/blob/main/src/test/java/com/example/ChatApplication/WebSocketEndpointIT.java#L283-L325
+
+
+#### 🔄 Execution Flow
+
+```
+User A (Offline Recipient)        Server                     User B (Active Sender)
+   │                                │                                │
+   │   [User A Offline for 1+ Day]  │◄── POST /user/updateBlockList ─┤
+   │                                │    (Block User A)              │
+   │                                ├─── Persist Pending Notification│
+   │                                │◄── 200 OK ─────────────────────┤
+   │                                │                                │
+   │   [User A Logs In / Reconnects]│                                │
+   ├─── GET /user/notification/pending►                            │
+   │◄── 200 OK List<Notification> ──┤                                │
+   │    (BlockNotificationPayload)  │                                │
+```
+#### 📋 Detailed Steps
+
+1. **Offline State Identification**
+   * User A has been offline for a period of time (e.g., recorded last offline timestamp in database).
+
+2. **Event Trigger & Pending Persistence**
+   * **Trigger Event:** Active User B issues a `POST` request to `/api/v1/user/updateBlockList` adding User A to their block list.
+   * **Store Pending Notification:** Detecting that User A is offline, the server encapsulates the block event into a `Notification` object with a `BlockNotificationPayload` and stores it with a pending status assigned to recipient User A.
+
+3. **Pending Notification Retrieval**
+   * **Fetch Missed Notifications:** Upon reconnecting, User A sends an authenticated `GET` request to `/api/v1/user/notification/pending`.
+   * **Deliver Payloads:** The server queries and returns all unread pending notifications, allowing User A to inspect the notification details (`blockedUser`, `blockedBy`, and `recipientId`).
+
+---
+
+#### 📡 API & Socket Endpoints Summary
+
+| Type | Endpoint / Destination | Method | Description |
+| :--- | :--- | :---: | :--- |
+| **REST API** | `/api/v1/user/updateBlockList` | `POST` | Update user block list (triggers pending notification if target is offline) |
+| **REST API** | `/api/v1/user/notification/pending` | `GET` | Fetch all pending notifications generated while the authenticated recipient was offline |
 
 This project uses integration tests to validate end-to-end behavior of the real-time messaging and offline catch-up flows. See the integration test method `testSendMessage_andRead_bySubscribers()` in the test class `WebSocketEndpointIT` for a concrete example: it exercises sending a STOMP message, broadcasting to active subscribers, and verifying pending message storage and retrieval for offline users — see the test
